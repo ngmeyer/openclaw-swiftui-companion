@@ -1,0 +1,35 @@
+name: Swift
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Select Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: latest-stable
+    
+    - name: Build
+      run: |
+        xcodebuild clean build \
+          -project SwiftUICompanion.xcodeproj \
+          -scheme SwiftUICompanion \
+          -sdk iphonesimulator \
+          -destination 'platform=iOS Simulator,name=iPhone 14'
+    
+    - name: Run tests
+      run: |
+        xcodebuild test \
+          -project SwiftUICompanion.xcodeproj \
+          -scheme SwiftUICompanionTests \
+          -sdk iphonesimulator \
+          -destination 'platform=iOS Simulator,name=iPhone 14'
